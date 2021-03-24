@@ -1,4 +1,8 @@
 #include <ESP32Servo.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#define USE_SERIAL Serial
+
 // Conncet the port of the stepper motor driver
 int outPorts[] = {14, 27, 26, 25};
 Servo myservo;  // create servo object to control a servo
@@ -6,7 +10,23 @@ Servo myservo;  // create servo object to control a servo
 int posVal = 0;    // variable to store the servo position
 int servoPin = 4; // Servo motor pin
 
+const char* ssid = "Rosie 12";
+const char* password = "Wtf11112222";
+String address = "http://165.227.76.232:3000/yw3487/running";
+
 void setup() {
+  USE_SERIAL.begin(115200);
+
+  WiFi.begin(ssid, password);
+  USE_SERIAL.println(String("Connecting to ")+ssid);
+  while (WiFi.status() != WL_CONNECTED){
+    delay(500);
+    USE_SERIAL.print(".");
+  }
+  USE_SERIAL.println("\nConnected, IP address: ");
+  USE_SERIAL.println(WiFi.localIP());
+  USE_SERIAL.println("Setup End");
+  
   // set pins to output
   for (int i = 0; i < 4; i++) {
     pinMode(outPorts[i], OUTPUT);
@@ -16,8 +36,31 @@ void setup() {
 
 }
 
-void loop()
-{
+void loop(){
+  if((WiFi.status() == WL_CONNECTED)) {
+    HTTPClient http;
+    http.begin(address);
+ 
+    int httpCode = http.GET(); // start connection and send HTTP header
+    if (httpCode == HTTP_CODE_OK) { 
+        String response = http.getString();
+        if (response.equals("false")) {
+            // Do not run sculpture, perhaps sleep for a couple seconds
+        }
+        else if(response.equals("true")) {
+            // Run sculpture
+            moveMotors();
+        }
+        USE_SERIAL.println("Response was: " + response);
+    } else {
+        USE_SERIAL.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    http.end();
+    delay(500); // sleep for half of a second
+  }
+}
+
+void moveMotors(){
   // Rotate a full turn
   moveSteps(true, 32 * 64, 3);
   delay(1000);
