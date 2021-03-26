@@ -14,6 +14,8 @@ const char* ssid = "Rosie 12";
 const char* password = "Wtf11112222";
 String address = "http://165.227.76.232:3000/yw3487/running";
 
+long randN = 0;
+long itN = 0;
 void setup() {
   USE_SERIAL.begin(115200);
 
@@ -62,24 +64,44 @@ void loop(){
 
 void moveMotors(){
   // Rotate a full turn
-  moveSteps(true, 32 * 64, 3);
+  moveSteps(true, 8 * 64, 3);
   delay(1000);
-  sweepServo();
-  // Rotate a full turn towards another direction
-  moveSteps(false, 32 * 64, 3);
+  itN = random(1,5);
+  for(int i = 0; i <= itN; i+=1){
+    sweepServo();
+  }
+  
+  moveSteps(true, 8 * 64, 3);
   delay(1000);
+  itN = random(1,5);
+  for(int i = 0; i <= itN; i+=1){
+    sweepServo();
+  }
 
-  sweepServo();
+  moveSteps(true, 8 * 64, 3);
+  delay(1000);
+  itN = random(1,5);
+  for(int i = 0; i <= itN; i+=1){
+    sweepServo();
+  }
+
+  moveSteps(true, 8 * 64, 3);
+  delay(1000);
+  itN = random(1,5);
+  for(int i = 0; i <= itN; i+=1){
+    sweepServo();
+  }
 
 }
 
 void sweepServo(){
-    for (posVal = 0; posVal <= 180; posVal += 1) { // goes from 0 degrees to 180 degrees
+  randN = random(10,180);
+    for (posVal = 0; posVal <= randN; posVal += 1) { // goes from 0 degrees to 180 degrees
       // in steps of 1 degree
       myservo.write(posVal);       // tell servo to go to position in variable 'pos'
       delay(5);                   // waits 15ms for the servo to reach the position
     }
-    for (posVal = 180; posVal >= 0; posVal -= 1) { // goes from 180 degrees to 0 degrees
+    for (posVal = randN; posVal >= 0; posVal -= 1) { // goes from 180 degrees to 0 degrees
       myservo.write(posVal);       // tell servo to go to position in variable 'pos'
       delay(5);                   // waits 15ms for the servo to reach the position
     }
