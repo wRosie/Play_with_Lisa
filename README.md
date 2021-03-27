@@ -10,6 +10,7 @@ This project is inspired by my last project Schrodinger’s cat. I feel guilty i
 ## To Reproduce
 Hardware:
 This project is completed with an ESP32, a stepper motor and a servo motor. The stepper motor is for moving the needle in panel, and the servo motor is for sweeping the cat toy. To set up the project, you will also need a computer with [Arduino IDE](https://www.arduino.cc) to program the ESP32. I also made an enclosure for the toy with a cardboard box.
+![controller](./IMG_7430.jpg) ![Pi](./IMG_7428.jpg) ![Pi](./IMG_7423.jpg) 
 
 
 Software:
